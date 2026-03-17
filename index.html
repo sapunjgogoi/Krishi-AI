@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Krishi AI – Smart Farming Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  <!-- Ambient background blobs -->
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+  <div class="bg-blob blob-3"></div>
+
+  <div class="page-wrapper">
+
+    <!-- ── Header ─────────────────────────────────────── -->
+    <header class="site-header">
+      <div class="logo">
+        <span class="logo-icon">🌾</span>
+        <span class="logo-text">Krishi <span class="accent">AI</span></span>
+      </div>
+      <p class="tagline">Smart Farming Assistant powered by Gemini</p>
+    </header>
+
+    <!-- ── Hero ───────────────────────────────────────── -->
+    <section class="hero">
+      <div class="hero-badge">AI-Powered Crop Diagnosis</div>
+      <h1 class="hero-title">
+        Describe your<br/>
+        <em>crop symptoms</em>,<br/>
+        get instant answers.
+      </h1>
+      <p class="hero-sub">
+        Tell us what you see on your plants — yellowing leaves, spots, wilting,
+        unusual growth — and our AI will diagnose the problem and give you
+        actionable treatment advice.
+      </p>
+    </section>
+
+    <!-- ── Form Card ──────────────────────────────────── -->
+    <main class="card form-card">
+
+      <div class="card-header">
+        <span class="step-badge">Step 1</span>
+        <h2>Describe the symptoms</h2>
+        <p>Be as specific as possible — mention the crop type, affected parts, colour changes, smell, or any other observations.</p>
+      </div>
+
+      <div class="form-body">
+        <div class="textarea-wrapper">
+          <textarea
+            id="symptoms"
+            placeholder="e.g. My wheat crop has yellow-brown patches on the leaves. The edges of the leaves are turning dry and there are small black dots forming on the stems. The lower leaves seem to be the most affected..."
+            maxlength="2000"
+            rows="7"
+            aria-label="Describe crop symptoms"
+          ></textarea>
+          <div class="char-counter"><span id="charCount">0</span> / 2000</div>
+        </div>
+
+        <!-- Error message area -->
+        <div id="errorMsg" class="error-msg" role="alert" aria-live="polite"></div>
+
+        <button id="analyzeBtn" class="btn-primary" type="button">
+          <span class="btn-text">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <!-- CHeck here 1 -->
+          </span>
+          <span class="btn-loading" hidden>
+            <span class="spinner"></span>
+            Analyze Symptoms <!-- CHeck here 2 -->
+          </span>
+        </button>
+      </div>
+
+      <!-- Tips -->
+      <div class="tips-strip">
+        <span class="tip"><span>🌿</span> Mention the crop name</span>
+        <span class="tip"><span>🔍</span> Describe colour & texture</span>
+        <span class="tip"><span>📍</span> Note which part is affected</span>
+      </div>
+
+    </main>
+
+    <!-- ── How It Works ───────────────────────────────── -->
+    <section class="how-it-works">
+      <h3>How it works</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <p>Describe what you see on your crops in plain language</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <p>Our AI analyses the symptoms using agricultural science</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <p>Receive disease name, cause, treatment & prevention guide</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>Krishi AI &copy; 2025 · For educational use · Always consult a local agronomist for critical decisions</p>
+    </footer>
+
+  </div><!-- /page-wrapper -->
+
+  <!-- Result section (shown after analysis, same page) -->
+  <div id="resultOverlay" class="result-overlay" hidden>
+    <div class="result-panel">
+      <button id="closeResult" class="close-btn" aria-label="Close result">✕</button>
+      <div class="result-header">
+        <span class="result-icon">🔬</span>
+        <h2>Diagnosis Report</h2>
+        <p id="resultSummary" class="result-summary"></p>
+      </div>
+
+      <div class="result-grid">
+        <div class="result-card rc-disease">
+          <div class="rc-icon">🦠</div>
+          <h4>Disease / Condition</h4>
+          <p id="resDisease"></p>
+        </div>
+        <div class="result-card rc-cause">
+          <div class="rc-icon">🔎</div>
+          <h4>Cause</h4>
+          <p id="resCause"></p>
+        </div>
+        <div class="result-card rc-treatment">
+          <div class="rc-icon">💊</div>
+          <h4>Treatment</h4>
+          <p id="resTreatment"></p>
+        </div>
+        <div class="result-card rc-prevention">
+          <div class="rc-icon">🛡️</div>
+          <h4>Preventive Measures</h4>
+          <p id="resPrevention"></p>
+        </div>
+      </div>
+
+      <div class="result-actions">
+        <button id="printResult" class="btn-secondary">🖨️ Print / Save</button>
+        <button id="newAnalysis" class="btn-primary">🌱 New Analysis</button>
+      </div>
+
+      <p class="disclaimer">⚠️ This is an AI-generated diagnosis. Please consult a certified agronomist before taking any major action.</p>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
